@@ -1,0 +1,41 @@
+
+name: Calculator CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Download repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Check whether files exist
+      - name: Validate Files
+        run: |
+          test -f index.html
+          test -f style.css
+          echo "HTML and CSS files found successfully!"
+
+      # Step 3: Prepare application files
+      - name: Prepare Application
+        run: |
+          mkdir -p publish
+          cp index.html publish/
+          cp style.css publish/
+
+      # Step 4: Upload artifact
+      - name: Upload Calculator Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Calculator-Build
+          path: publish/
